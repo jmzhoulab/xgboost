@@ -32,7 +32,7 @@ import org.apache.commons.logging.LogFactory
 
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkContext, SparkParallelismTracker, TaskContext}
-import org.apache.spark.sql.{DataFrame, SparkSession}
+import org.apache.spark.sql.{DataFrame, SparkSession, ActiveSession}
 
 
 /**
@@ -232,7 +232,7 @@ object XGBoost extends Serializable {
    */
   private def validateSparkSslConf(sc: SparkContext): Unit = {
     val (sparkSslEnabled: Boolean, xgboostSparkIgnoreSsl: Boolean) =
-      SparkSession.getActiveSession match {
+      ActiveSession.get match {
         case Some(ss) =>
           (ss.conf.getOption("spark.ssl.enabled").getOrElse("false").toBoolean,
             ss.conf.getOption("xgboost.spark.ignoreSsl").getOrElse("false").toBoolean)
